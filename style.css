@@ -45,7 +45,8 @@ body {
 }
 
 .completed-books-container, .wishlist-books-container {
-  margin: 0 16px;
+  margin: 16px;
+  
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
   gap: 16px;
@@ -91,6 +92,7 @@ body {
   margin-left: 4px;
   white-space: nowrap;
   line-height: 3;
+  font-style: normal;
 }
 
 .book-btns {
