@@ -76,6 +76,7 @@ function validateForm(e) {
 }
 
 function renderBooks(myLibrary) {
+  myLibrary.sort((a, b) => a.name.localeCompare(b.name));
   const wishlist = document.querySelector(".wishlist-books-container");
   const completed = document.querySelector(".completed-books-container");
   wishlist.innerHTML = "";
@@ -92,6 +93,7 @@ function renderBooks(myLibrary) {
 function createBookElement(book) {
   const bookDiv = document.createElement("div");
   bookDiv.classList.add("book");
+  bookDiv.classList.add("uid-" + book.id);
 
   // Add book title to book
   const bookTitleDiv = document.createElement("div");
@@ -102,11 +104,11 @@ function createBookElement(book) {
   const titleLeadingWords = bookTitleArray.slice(0, -1).join(" ");
 
   // "To Kill A Mocking" as its own text node, sibling to the span below
-  bookTitleDiv.appendChild(document.createTextNode(titleLeadingWords));
+  bookTitleDiv.appendChild(document.createTextNode(titleLeadingWords + " "));
 
   const titleNoBreakSpan = document.createElement("span");
   titleNoBreakSpan.classList.add("no-break");
-  titleNoBreakSpan.appendChild(document.createTextNode(titleLastWord + " ")); // "Bird" as text, not textContent
+  titleNoBreakSpan.appendChild(document.createTextNode(titleLastWord)); // "Bird" as text, not textContent
 
   const titleAttrDescSpan = document.createElement("span");
   titleAttrDescSpan.classList.add("attr-desc");
@@ -174,6 +176,8 @@ function createBookElement(book) {
     hasReadBook.textContent = "Unread";
   }
 
+  hasReadBook.addEventListener("click", () => swapRead(book.id));
+
   const removeBookBtn = document.createElement("div");
   removeBookBtn.classList.add("remove-book-btn");
   removeBookBtn.textContent = "X";
@@ -182,5 +186,26 @@ function createBookElement(book) {
   bookBtns.appendChild(removeBookBtn);
 
   bookDiv.appendChild(bookBtns);
+  removeBookBtn.addEventListener("click", () => removeBook(book.id));
   return bookDiv;
+}
+
+function removeBook(id) {
+  const index = myLibrary.findIndex((book) => book.id == id);
+  console.log(index, id);
+  if (index !== -1) myLibrary.splice(index, 1);
+  renderBooks(myLibrary);
+}
+
+function swapRead(id) {
+  const index = myLibrary.findIndex((book) => book.id == id);
+  console.log(index, id);
+  if (index !== -1) {
+    if (myLibrary[index].hasRead === false) {
+      myLibrary[index].hasRead = true;
+    } else {
+      myLibrary[index].hasRead = false;
+    }
+  }
+  renderBooks(myLibrary);
 }
